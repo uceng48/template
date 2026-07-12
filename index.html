@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data: file: blob:; img-src 'self' data: file: https:;">
+    
+    <title>Card Generator Pro - Navy Custom Edition</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@100;300;400;500;600;700;800;900&family=Fredoka:wght@300;400;600&family=Sacramento&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root { 
+            --scale-factor: 1; 
+            --primary-color: #64ffda;
+            --sidebar-bg: #0a192f;
+            --input-bg: #112240;
+            --text-main: #e6f1ff;
+            --text-muted: #8892b0;
+            --bg-main: #f2f2f2;
+            --border-radius: 6px;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0; padding: 0; background-color: var(--bg-main);
+            display: flex; height: 100vh; overflow: hidden;
+            -webkit-user-select: none; user-select: none;
+            color: #333; 
+        }
+
+        /* --- FONT DEF --- */
+        @font-face { font-family: 'Overthink'; src: local('Overthink'), url('./fonts/Overthink.otf') format('opentype'); }
+        @font-face { font-family: 'Great Vibes'; src: local('Great Vibes'), url('./fonts/GreatVibes-Regular.ttf') format('truetype'); }
+        @font-face { font-family: 'SansSerifFLF'; src: local('SansSerifFLF'), url('./fonts/SansSerifFLF.otf') format('opentype'); }
+        @font-face { font-family: 'SansSerifFLF-Demibold'; src: local('SansSerifFLF-Demibold'), url('./fonts/SansSerifFLF-Demibold.otf') format('opentype'); font-weight: 600; }
+        @font-face { font-family: 'SansSerifFLF-DemiItalic'; src: local('SansSerifFLF-DemiItalic'), url('./fonts/SansSerifFLF-DemiItalic.otf') format('opentype'); font-weight: 600; font-style: italic; }
+        @font-face { font-family: 'SansSerifFLF-Italic'; src: local('SansSerifFLF-Italic'), url('./fonts/SansSerifFLF-Italic.otf') format('opentype'); font-style: italic; }
+        @font-face { font-family: 'SansSerifBldFLF'; src: local('SansSerifBldFLF'), url('./fonts/SansSerifBldFLF.otf') format('opentype'); font-weight: 700; }
+        @font-face { font-family: 'SansSerifBldFLF-Italic'; src: local('SansSerifBldFLF-Italic'), url('./fonts/SansSerifBldFLF-Italic.otf') format('opentype'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'SansSerifBldFLFCond'; src: local('SansSerifBldFLFCond'), url('./fonts/SansSerifBldFLFCond.otf') format('opentype'); font-weight: 700; }
+        @font-face { font-family: 'SansSerifBldFLFCond-Italic'; src: local('SansSerifBldFLFCond-Italic'), url('./fonts/SansSerifBldFLFCond-Italic.otf') format('opentype'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'SansSerifBookFLF'; src: local('SansSerifBookFLF'), url('./fonts/SansSerifBookFLF.otf') format('opentype'); font-weight: 400; }
+        @font-face { font-family: 'SansSerifBookFLF-Italic'; src: local('SansSerifBookFLF-Italic'), url('./fonts/SansSerifBookFLF-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; }
+        @font-face { font-family: 'SansSerifExbFLF'; src: local('SansSerifExbFLF'), url('./fonts/SansSerifExbFLF.otf') format('opentype'); font-weight: 900; }
+        @font-face { font-family: 'SansSerifExbFLFCond'; src: local('SansSerifExbFLFCond'), url('./fonts/SansSerifExbFLFCond.otf') format('opentype'); font-weight: 900; }
+        @font-face { font-family: 'SansSerifExbFLFCond-Italic'; src: local('SansSerifExbFLFCond-Italic'), url('./fonts/SansSerifExbFLFCond-Italic.otf') format('opentype'); font-weight: 900; font-style: italic; }
+        @font-face { font-family: 'SansSerifExbFLF-Italic'; src: local('SansSerifExbFLF-Italic'), url('./fonts/SansSerifExbFLF-Italic.otf') format('opentype'); font-weight: 900; font-style: italic; }
+        @font-face { font-family: 'Bell MT'; src: local('Bell MT'), url('./fonts/bell-mt.ttf') format('truetype'); }
+        @font-face { font-family: 'Bell MT Bold'; src: local('Bell MT Bold'), url('./fonts/bell-mt-bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Monotype Corsiva'; src: local('Monotype Corsiva'), url('./fonts/Monotype-Corsiva-Regular.ttf') format('truetype'); }
+        @font-face { font-family: 'Monotype Corsiva Bold'; src: local('Monotype Corsiva Bold'), url('./fonts/Monotype-Corsiva-Bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Monotype Corsiva Bold Italic'; src: local('Monotype Corsiva Bold Italic'), url('./fonts/Monotype-Corsiva-Bold-Italic.ttf') format('truetype'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'Monotype Corsiva Italic'; src: local('Monotype Corsiva Italic'), url('./fonts/Monotype-Corsiva-Regular-Italic.ttf') format('truetype'); font-style: italic; }
+        @font-face { font-family: 'Quicksand Light'; src: local('Quicksand Light'), url('./fonts/Quicksand-Light.ttf') format('truetype'); font-weight: 300; }
+        @font-face { font-family: 'Quicksand Light Italic'; src: local('Quicksand Light Italic'), url('./fonts/Quicksand-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; }
+        @font-face { font-family: 'Quicksand Medium'; src: local('Quicksand Medium'), url('./fonts/Quicksand-Medium.ttf') format('truetype'); font-weight: 500; }
+        @font-face { font-family: 'Quicksand Regular'; src: local('Quicksand Regular'), url('./fonts/Quicksand-Regular.ttf') format('truetype'); font-weight: 400; }
+        @font-face { font-family: 'Quicksand Italic'; src: local('Quicksand Italic'), url('./fonts/Quicksand-Italic.otf') format('opentype'); font-style: italic; }
+        @font-face { font-family: 'Quicksand SemiBold'; src: local('Quicksand SemiBold'), url('./fonts/Quicksand-SemiBold.ttf') format('truetype'); font-weight: 600; }
+        @font-face { font-family: 'Quicksand Bold Italic'; src: local('Quicksand Bold Italic'), url('./fonts/Quicksand-BoldItalic.otf') format('opentype'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'Raleway Medium'; src: local('Raleway Medium'), url('./fonts/Raleway-Medium.ttf') format('truetype'); font-weight: 500; }
+        @font-face { font-family: 'Raleway Bold'; src: local('Raleway Bold'), url('./fonts/Raleway-Bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Raleway Heavy'; src: local('Raleway Heavy'), url('./fonts/Raleway-Heavy.ttf') format('truetype'); font-weight: 900; }
+        @font-face { font-family: 'Nexa Heavy'; src: local('Nexa Heavy'), url('./fonts/Nexa-Heavy.ttf') format('truetype'); font-weight: 900; }
+        @font-face { font-family: 'Montserrat Bold'; src: local('Montserrat Bold'), url('./fonts/montserrat-bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Pacifico'; src: local('Pacifico'), url('./fonts/Pacifico.ttf') format('truetype'); }
+        @font-face { font-family: 'Caviar Dreams'; src: local('Caviar Dreams'), url('./fonts/Caviar-Dreams.ttf') format('truetype'); }
+        @font-face { font-family: 'Berkshire Swash'; src: local('Berkshire Swash'), url('./fonts/berkshireswash-regular.ttf') format('truetype'); }
+        @font-face { font-family: 'Segoe Script Bold'; src: local('Segoe Script Bold'), url('./fonts/segoe-script-bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Weezer'; src: local('Weezer'), url('./fonts/weezerfont.ttf') format('truetype'); }
+        @font-face { font-family: 'Hello'; src: local('Hello'), url('./fonts/Hello.otf') format('opentype'); }
+        @font-face { font-family: 'History of Wawa'; src: local('History of Wawa'), url('./fonts/HistoryofWawa.otf') format('opentype'); }
+        @font-face { font-family: 'Magnetta Wettney'; src: local('Magnetta Wettney'), url('./fonts/Magnetta-Wettney.ttf') format('truetype'); }
+        @font-face { font-family: 'Century 725'; src: local('Century 725'), url('./fonts/Century725CnBT.ttf') format('truetype'); }
+        @font-face { font-family: 'Century 751'; src: local('Century 751'), url('./fonts/Century751BTRoman.ttf') format('truetype'); }
+        @font-face { font-family: 'Century 751 Italic'; src: local('Century 751 Italic'), url('./fonts/Century751BTItalic.ttf') format('truetype'); font-style: italic; }
+        @font-face { font-family: 'Century 751 No2 Bold'; src: local('Century 751 No2 Bold'), url('./fonts/Century751No2BTBold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Century 751 No2 Bold Italic'; src: local('Century 751 No2 Bold Italic'), url('./fonts/Century751No2BTBoldItalic.ttf') format('truetype'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'Century 751 No2'; src: local('Century 751 No2'), url('./fonts/Century751No2BTRoman.ttf') format('truetype'); }
+        @font-face { font-family: 'Century 751 No2 Italic'; src: local('Century 751 No2 Italic'), url('./fonts/Century751No2BTItalic.ttf') format('truetype'); font-style: italic; }
+        @font-face { font-family: 'Century 751 SeBd SemiBold'; src: local('Century 751 SeBd SemiBold'), url('./fonts/Century751SeBdBTSemiBold.ttf') format('truetype'); font-weight: 600; }
+        @font-face { font-family: 'Century 751 SeBd SemiBold Italic'; src: local('Century 751 SeBd SemiBold Italic'), url('./fonts/Century751SeBdBTSemiBoldItalic.ttf') format('truetype'); font-weight: 600; font-style: italic; }
+        @font-face { font-family: 'Calibri'; src: local('Calibri'), url('./fonts/calibri-bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Calibri Italic'; src: local('Calibri Italic'), url('./fonts/calibri-italic.ttf') format('truetype'); font-style: italic; }
+        @font-face { font-family: 'Calibri Bold Italic'; src: local('Calibri Bold Italic'), url('./fonts/calibri-bold-italic.ttf') format('truetype'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'Dolpino'; src: local('Dolpino'), url('./fonts/Dolpino.ttf') format('truetype'); }
+        @font-face { font-family: 'Dominik'; src: local('Dominik'), url('./fonts/Dominik.ttf') format('truetype'); }
+        @font-face { font-family: 'Edges'; src: local('Edges'), url('./fonts/Edges.ttf') format('truetype'); }
+        @font-face { font-family: 'Exotc350'; src: local('Exotc350'), url('./fonts/exotc350bdbtbold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Futura Kit'; src: local('Futura Kit'), url('./fonts/futubkit.ttf') format('truetype'); }
+        @font-face { font-family: 'Futura Book'; src: local('Futura Book'), url('./fonts/Futura-Book.ttf') format('truetype'); }
+        @font-face { font-family: 'Futura Book BT'; src: local('Futura Book BT'), url('./fonts/Futura Bk BT Book.ttf') format('truetype'); }
+        @font-face { font-family: 'Futura Bk Bold'; src: local('Futura Bk Bold'), url('./fonts/Futura Bk-Bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Futura Medium'; src: local('Futura Medium'), url('./fonts/futura-20medium-20bt.ttf') format('truetype'); font-weight: 500; }
+        @font-face { font-family: 'Futura Book Italic'; src: local('Futura Book Italic'), url('./fonts/FuturaBBTBookItalic.ttf') format('truetype'); font-style: italic; }
+        @font-face { font-family: 'Futura Bk'; src: local('Futura Bk'), url('./fonts/FuturaBk.ttf') format('truetype'); }
+        @font-face { font-family: 'Futura Book BT 2'; src: local('Futura Book BT 2'), url('./fonts/Futura-Bk-BT-Book.ttf') format('truetype'); }
+        @font-face { font-family: 'Futura Book BT 3'; src: local('Futura Book BT 3'), url('./fonts/futurabookbt.ttf') format('truetype'); }
+        @font-face { font-family: 'MAIAN'; src: local('MAIAN'), url('./fonts/MAIAN.TTF') format('truetype'); }
+
+        /* --- SIDEBAR (NAVY THEME) --- */
+        .sidebar {
+            width: 0; 
+            background: var(--sidebar-bg);
+            color: var(--text-main);
+            border-right: none;
+            display: flex; flex-direction: column; padding: 0; gap: 15px;
+            overflow: hidden; z-index: 2000; box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            -webkit-app-region: no-drag; flex-shrink: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+        }
+        
+        .sidebar.open { width: 340px; padding: 25px 20px; overflow-y: auto; }
+        
+        .sidebar-toggle-container { position: absolute; left: 0; top: 20px; z-index: 2001; transition: left 0.4s ease; }
+        .sidebar.open + .sidebar-toggle-container { left: 340px; }
+        
+        .sidebar-toggle-btn { 
+            width: 40px; height: 40px; background: var(--sidebar-bg); color: var(--primary-color); 
+            border-radius: 0 50% 50% 0; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            font-size: 18px; border: 1px solid #1e2d4d; border-left: none;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 15px; border-radius: var(--border-radius);
+            border: 1px solid rgba(255,255,255,0.1); 
+            margin-bottom: 5px;
+        }
+
+        h3 { 
+            font-size: 13px; margin: 0 0 12px 0; 
+            color: var(--primary-color); text-transform: uppercase; 
+            font-weight: 700; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;
+        }
+        
+        label { font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 5px; }
+        .row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+        
+        input, select, textarea { 
+            width: 100%; padding: 10px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 6px; 
+            font-size: 12px; font-family: inherit; transition: all 0.3s;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            -webkit-user-select: text !important; user-select: text !important;
+            cursor: text !important;
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--primary-color); 
+            outline: none; 
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.1); 
+        }
+
+        ::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+        button { 
+            flex: 1; padding: 10px; border: none; border-radius: 6px; 
+            cursor: pointer; font-weight: 600; font-size: 11px; transition: all 0.3s ease; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        button:hover { transform: translateY(-1px); filter: brightness(1.1); opacity: 0.9; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-layout { background: rgba(255,255,255,0.1); color: var(--text-main); border: 1px solid rgba(255,255,255,0.2); }
+        .btn-layout.active { background: var(--primary-color); color: var(--sidebar-bg); border-color: var(--primary-color); font-weight: 800; }
+        
+        .btn-icon { background: rgba(255,255,255,0.1); color: var(--text-main); font-size: 12px; padding: 8px; }
+        .btn-print-mod { background: #17a2b8; color: white; padding: 10px; font-size: 12px; width: 100%; margin-top: 5px;}
+        .btn-back { background: #f6ad55; color: #1a202c; }
+        .btn-print-now { background: #4299e1; color: white; }
+        
+        .btn-primary { background: var(--primary-color); color: var(--sidebar-bg); font-weight: 700; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #ff5f57; color: white; }
+        .btn-warning { background: #ffc107; color: #333; }
+        .btn-info { background: #17a2b8; color: white; }
+
+        /* --- AREA UTAMA --- */
+        .main-area {
+            flex: 1; display: flex; flex-direction: column; height: 100vh;
+            overflow: hidden; background-color: #e2e2e2;
+            background-image: radial-gradient(#ccc 1px, transparent 1px); background-size: 20px 20px;
+        }
+
+        /* --- FORM PANEL (TOP BAR) --- */
+        .form-panel {
+            background: var(--sidebar-bg); 
+            padding: 15px 20px; border-bottom: 2px solid var(--primary-color);
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100;
+            flex-shrink: 0; max-height: 200px; overflow-y: auto;
+            color: var(--text-main); 
+        }
+        
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { color: var(--primary-color); font-weight: 700; font-size: 10px; margin-bottom: 4px; text-transform: uppercase; }
+        .inp-std { height: 38px; }
+
+        /* --- CANVAS & CARDS --- */
+        .workspace-scroll { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 30px; }
+        .canvas-container { transition: transform 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.4); background: white; border-radius: 4px; }
+        #card-wrapper { position: relative; background: white; overflow: hidden; width: 550px; height: 385px; }
+        #bg-image { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        .content-overlay { position: absolute; z-index: 10; top: 0; left: 0; width: 100%; height: 100%; display: block; }
+        
+        .movable-txt {
+            position: absolute; 
+            left: 50%; 
+            transform: translateX(-50%);
+            text-align: center; 
+            white-space: pre;
+            width: auto !important;
+            min-width: max-content;
+            cursor: move;
+            border: 1px dashed transparent; 
+            transition: all 0.2s;
+            padding: 2px;
+            word-wrap: normal;
+        }
+
+        #outTitle1  { top: 15px; }
+        #outTitle2  { top: 45px; }
+        #outIntro   { top: 80px; }
+        #outName    { top: 120px; font-size: 22px; font-weight: bold; }
+        #outDetails { top: 175px; }
+        #outPrayer  { top: 210px; }
+        #outParents { top: 300px; }
+        #outFooter  { top: 340px; }
+        
+        .movable-txt:hover { background-color: rgba(0, 123, 255, 0.1); border-color: rgba(0,0,0,0.2); }
+        .selected-element { border: 2px dashed var(--primary-color) !important; background-color: rgba(100, 255, 218, 0.1); cursor: move; }
+        .movable-txt.multi-line { 
+            white-space: pre-wrap !important;
+            word-wrap: normal !important; 
+            width: auto !important; 
+        }
+        
+        .photo-overlay-element { position: absolute; cursor: move; border: 2px dashed transparent; z-index: 15; overflow: hidden; }
+        .photo-overlay-element.selected { border: 2px dashed var(--primary-color); }
+        .photo-overlay-element img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .photo-overlay-element.circular { border-radius: 50%; }
+        .photo-overlay-element.circular img { border-radius: 50%; }
+        
+        .resize-handle {
+            position: absolute; width: 10px; height: 10px; background: var(--primary-color);
+            border-radius: 50%; bottom: 0; right: 0; cursor: nwse-resize; display: none; z-index: 20;
+        }
+        .photo-overlay-element.selected .resize-handle { display: block; }
+
+        .loading-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(10, 25, 47, 0.9); z-index: 9999; display: none; 
+            align-items: center; justify-content: center; color: var(--primary-color); flex-direction: column; 
+        }
+
+        #print-area { display: none; background: white; margin: 0 auto; align-content: start; }
+        .print-cell { 
+            position: relative; 
+            border: none !important;
+            overflow: hidden; 
+            page-break-inside: avoid; 
+            background: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .print-content { flex-shrink: 0; transform-origin: center center; background-color: white; overflow: hidden; }
+        
+        .print-slug-info { 
+            position: fixed !important;
+            bottom: 5mm;
+            left: 10mm;
+            display: flex !important; 
+            font-family: sans-serif; 
+            font-size: 9pt;
+            color: #000;
+            background: transparent;
+            border-top: none !important;
+            z-index: 9999;
+            width: auto;
+        }
+
+        @media print {
+            @page { margin: 0; size: auto; }
+            body { margin: 0; background: white; display: block !important; height: auto !important; overflow: visible !important; }
+            .sidebar, .main-area, .sidebar-toggle-container { display: none !important; }
+            #print-area { display: grid !important; width: 100% !important; margin: 0; padding-top: 25px; justify-content: center; }
+            .print-cell { border: none !important; }
+            .print-slug-info { 
+                display: flex !important; 
+                page-break-inside: avoid;
+            }
+        }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-box { background: var(--sidebar-bg); color: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .modal-footer { margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end; }
+        
+        .paper-quantity-group { 
+            grid-column: span 2 !important; 
+            background: rgba(255,255,255,0.05); 
+            padding: 8px; 
+            border-radius: 6px; 
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        #sidebarPrintActions {
+            display: none; 
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #customSizeInputs { display: none; gap: 5px; margin-top: 5px; }
+        #customPaperInputs { display: none; gap: 5px; margin-top: -5px; margin-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; color: white; }
+        th, td { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px; text-align: left; }
+        thead { background: rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div style="font-size: 30px;">⏳</div>
+        <div>Memproses...</div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h3>🌄 Background & Foto</h3>
+            
+            <label>Ganti Background:</label>
+            <div class="row">
+                <input type="file" accept="image/*" onchange="uploadBg(this)" id="bgUpload">
+                <button class="btn-danger" onclick="saveState(); resetBg()" style="width: 35px;">✖</button>
+            </div>
+            
+            <label>Tambah Foto Anak:</label>
+            <div class="row">
+                <input type="file" accept="image/*" onchange="uploadOverlay(this)" id="overlayUpload">
+            </div>
+            
+            <label>Bentuk & Ukuran Foto:</label>
+            <div class="row" style="margin-top:5px;">
+                <button class="btn-icon" onclick="saveState(); setPhotoShape('rectangle')" id="btnRectShape" title="Kotak">⬛</button>
+                <button class="btn-icon" onclick="saveState(); setPhotoShape('circular')" id="btnCircShape" title="Bulat">⚫</button>
+                <button class="btn-icon" onclick="adjustPhotoSize(-10)">➖</button>
+                <input type="number" id="photoSize" value="150" onchange="setPhotoSizeManual(this.value)" style="width:60px; text-align:center;">
+                <button class="btn-icon" onclick="adjustPhotoSize(10)">➕</button>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>📏 Pengaturan Kartu</h3>
+                <label>Ukuran Kartu:</label>
+                <div class="row">
+                    <select id="sizeSelect" onchange="saveState(); checkCustomSize(); updateDimension()" style="flex: 2;">
+                        <option value="10x7">10x7 cm</option>
+                        <option value="9x6">9x6 cm</option>
+                        <option value="custom">Custom (cm)</option>
+                    </select>
+                    <button class="btn-icon" onclick="saveState(); rotateCard(90)">↻</button>
+                </div>
+                <div id="customSizeInputs" class="row" style="display:none;">
+                    <input type="number" id="customW" placeholder="L" value="10" onchange="saveState(); updateDimension()">
+                    <input type="number" id="customH" placeholder="T" value="7" onchange="saveState(); updateDimension()">
+                </div>
+
+                <label>Gap Cetak (mm):</label>
+                <div class="row">
+                    <button class="btn-icon" onclick="adjustGap(-1)">➖</button>
+                    <input type="number" id="printGap" value="0" style="text-align:center;">
+                    <button class="btn-icon" onclick="adjustGap(1)">➕</button>
+                </div>
+                
+                <button class="btn-danger" onclick="resetAll()" style="width:100%; margin-top:5px;">🔄 Reset Semua Desain</button>
+            </div>
+            
+            <label>Orientasi Kartu:</label>
+            <div class="row">
+                <button id="btnLand" class="btn-layout active" onclick="saveState(); setLayout('landscape')">Landscape</button>
+                <button id="btnPort" class="btn-layout" onclick="saveState(); setLayout('portrait')">Portrait</button>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>🎨 Edit Teks</h3>
+            <small style="color:var(--text-muted);">*Klik teks di kartu untuk edit</small>
+            
+            <select id="targetSelect" onchange="loadStyle()" style="display:none;">
+                <option value="txt-name">Nama Anak</option>
+                <option value="txt-intro">Intro Text</option>
+                <option value="txt-prayer">Doa Text</option>
+                <option value="txt-footer">Footer</option>
+                <option value="txt-title">Judul Utama</option>
+                <option value="txt-title-sub">Sub Judul</option>
+                <option value="txt-parents">Nama Ortu</option>
+                <option value="txt-details">Detail Lahir</option>
+            </select>
+            
+            <label>Warna & Ukuran Font:</label>
+            <div class="row">
+                <input type="color" id="styleColor" oninput="applyStyle('color')" onchange="saveState()" style="height:35px; width:50px; flex:none; cursor:pointer;">
+                <button class="btn-icon" onclick="saveState(); adjustSize(-0.5)">➖</button>
+                <input type="number" id="styleSize" min="1" max="150" step="0.5" oninput="applyStyle('size')" onchange="saveState()" style="flex:2; text-align:center;">
+                <button class="btn-icon" onclick="saveState(); adjustSize(0.5)">➕</button>
+            </div>
+
+            <label>Jarak Antar Huruf (Spacing):</label>
+            <div class="row">
+                <button class="btn-icon" onclick="saveState(); adjustSpacing(-0.5)">◀️ Rapat</button>
+                <input type="number" id="styleSpacing" value="0" step="0.5" onchange="saveState(); applyStyle('spacing')" style="text-align:center; width:50px;">
+                <button class="btn-icon" onclick="saveState(); adjustSpacing(0.5)">Renggang ▶️</button>
+            </div>
+
+            <label>Ketebalan (Bold) & Jarak Baris:</label>
+            <div class="row">
+                <button class="btn-icon" onclick="saveState(); adjustWeight(-100)">B-</button>
+                <input type="number" id="styleWeight" value="400" step="100" onchange="saveState(); applyStyle('weight')" style="text-align:center; width:50px;">
+                <button class="btn-icon" onclick="saveState(); adjustWeight(100)">B+</button>
+                
+                <button class="btn-icon" onclick="saveState(); adjustLineHeight(-0.1)">LH-</button>
+                <input type="number" id="styleLineHeight" value="1.2" step="0.1" onchange="saveState(); applyStyle('lineHeight')" style="text-align:center; width:50px;">
+                <button class="btn-icon" onclick="saveState(); adjustLineHeight(0.1)">LH+</button>
+            </div>
+
+            <label>Align Teks:</label>
+            <div class="row">
+                <button class="btn-icon" onclick="saveState(); setTextAlignment('left')">Left</button>
+                <button class="btn-icon" onclick="saveState(); setTextAlignment('center')">Center</button>
+                <button class="btn-icon" onclick="saveState(); setTextAlignment('right')">Right</button>
+            </div>
+
+            <label>Jenis Font:</label>
+            <select id="styleFont" onchange="saveState(); applyStyle('font')">
+                <option value="'Poppins', sans-serif">Poppins (Default)</option>
+                <option value="'Monotype-Corsiva-Regular', sans-serif">Monotype-Corsiva-Regular</option>
+                <option value="'Great Vibes', cursive">Great Vibes</option>
+                <option value="'Arial', sans-serif">Arial</option>
+                <option value="'Times New Roman', serif">Times New Roman</option>
+            </select>
+            
+            <div class="row" style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.1); padding-top:5px;">
+                <label style="flex:1;">Outline Teks:</label>
+                <input type="checkbox" id="textOutlineToggle" onchange="saveState(); toggleTextOutline()">
+            </div>
+            <div class="row">
+                <input type="color" id="outlineColor" value="#ffffff" onchange="saveState(); updateOutlineColor()" style="width:40px; height:25px;">
+                <input type="number" id="outlineSize" value="1" step="0.5" onchange="saveState(); updateOutlineSize()" style="width:50px;"> px
+            </div>
+            
+            <input type="file" onchange="uploadFont(this)" style="margin-top:5px;" title="Upload font .ttf/.otf">
+        </div>
+
+        <div class="sidebar-section" style="border:none;">
+            <h3>🖨️ Cetak & Export</h3>
+            
+            <label>No. Invoice / Order:</label>
+            <input type="text" id="printOrderId" placeholder="INV-001" style="margin-bottom:10px;">
+
+            <label>Kertas & Jumlah:</label>
+            <div class="row">
+                <select id="paperSize" style="flex: 1.5;" onchange="checkCustomPaperSize()">
+                    <option value="A3+">A3+</option>
+                    <option value="A3">A3</option>
+                    <option value="A4">A4</option>
+                    <option value="F4">F4</option>
+                    <option value="custom">Custom Paper (mm)</option>
+                </select>
+                <input type="number" id="printQty" value="25" style="flex: 1; text-align: center;">
+            </div>
+            <div id="customPaperInputs" class="row" style="display:none; gap: 5px; margin-top: -5px; margin-bottom: 10px;">
+                <input type="number" id="paperCustomW" placeholder="Lebar mm" value="210" style="font-size: 10px;">
+                <input type="number" id="paperCustomH" placeholder="Tinggi mm" value="297" style="font-size: 10px;">
+            </div>
+
+            <button id="btnArrLayout" class="btn-print-now" onclick="modeCetak()" style="width:100%; margin-bottom:10px; padding:12px;">🖨️ Susun Cetak Otomatis</button>
+
+            <div class="row">
+                <button class="btn-info" onclick="saveAsPDF()">PDF</button>
+                <button class="btn-success" onclick="saveAsImage()">PNG</button>
+            </div>
+
+            <button class="btn-print-mod" style="background: var(--input-bg); border:1px solid var(--primary-color); color:var(--primary-color);" onclick="openLogModal()">📜 Riwayat Cetak</button>
+            
+            <div class="row" style="margin-top:10px; gap:5px;">
+                <button id="btnUndo" class="btn-warning" onclick="undo()">↩ Undo</button>
+                <button id="btnRedo" class="btn-warning" onclick="redo()">Redo ↪</button>
+            </div>
+            <button class="btn-print-mod" style="background: #6c757d;" onclick="generateTemplateCode()">🛠️ Export Kode</button>
+            
+            <div id="sidebarPrintActions">
+                <div style="background: rgba(100, 255, 218, 0.1); padding: 10px; border-radius: 5px; border: 1px dashed var(--primary-color); text-align: center; margin-bottom: 5px; font-size: 11px; color:white;">Mode Cetak Aktif</div>
+                <button class="btn-print-now" onclick="window.print()">🖨️ Print Sekarang</button>
+                <button class="btn-back" onclick="modeEdit()">⬅️ Kembali Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-toggle-container" id="toggleContainer">
+        <div class="sidebar-toggle-btn" onclick="toggleSidebar()">☰</div>
+    </div>
+
+    <div class="main-area" id="mainArea">
+        <div class="form-panel" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="form-group">
+                <label>1. Nama Anak</label>
+                <textarea id="inpName" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-name')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>2. Nama Orang Tua</label>
+                <textarea id="inpParents" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-parents')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>3. Judul Utama</label>
+                <textarea id="inpTitle1" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-title')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>4. Detail Lahir</label>
+                <textarea id="inpDetails" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-details')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>5. Load Template</label>
+                <div class="row" style="margin:0;">
+                    <input type="text" id="inputCode" placeholder="Kode" style="flex: 1.5; height: 38px; text-transform: uppercase;">
+                    <button class="btn-primary" onclick="loadByCode()" style="flex: 1; height: 38px;">CARI</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>6. Sub Judul</label>
+                <textarea id="inpTitle2" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-title-sub')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>7. Intro Text</label>
+                <textarea id="inpIntro" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-intro')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>8. Doa / Kata Mutiara</label>
+                <textarea id="inpPrayer" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-prayer')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>9. Footer (Bawah)</label>
+                <textarea id="inpFooter" class="inp-std" oninput="syncText()" onfocus="focusElement('txt-footer')"></textarea>
+            </div>
+            <div class="form-group">
+                <label>10. Jenis Kelamin</label>
+                <div class="row" style="margin:0;">
+                    <button id="btnBoy" class="btn-gender-l active" onclick="setGender('L')" style="height:38px;">Laki</button>
+                    <button id="btnGirl" class="btn-gender-p" onclick="setGender('P')" style="height:38px;">Prpuan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="workspace-scroll">
+            <div class="canvas-container" id="rotator">
+                <div id="card-wrapper" class="layout-landscape">
+                    <img id="bg-image" src="./bg-landscape.jpg" alt="Background" onerror="useBackupImage(this)">
+                    <div class="content-overlay">
+                        <div class="movable-txt txt-title" id="outTitle1">JUDUL</div>
+                        <div class="movable-txt txt-title-sub" id="outTitle2">Sub</div>
+                        <div class="movable-txt txt-intro" id="outIntro">Intro</div>
+                        <div class="movable-txt txt-name" id="outName">NAMA</div>
+                        <div class="movable-txt txt-details" id="outDetails">Detail Lahir</div>
+                        <div class="movable-txt txt-prayer" id="outPrayer">Doa</div>
+                        <div class="movable-txt txt-footer" id="outFooter">Footer</div>
+                        <div class="movable-txt txt-parents" id="outParents">Orang Tua</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="print-area"></div>
+
+    <div id="exportModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Kode Template Berhasil Dibuat!</h3>
+            <textarea id="exportOutput" readonly onclick="this.select()" style="width:100%; height:150px; font-family:monospace; padding:10px; border:1px solid #ccc; background: #0a192f; color: #64ffda;"></textarea>
+            <div class="modal-footer">
+                <button onclick="document.getElementById('exportModal').style.display='none'" class="btn-layout">Tutup</button>
+                <button onclick="copyToClipboard()" class="btn-success">Salin Kode</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="configModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 400px;">
+            <h3>Konfigurasi Template Baru</h3>
+            <label>Kode Template:</label>
+            <input type="text" id="cfgCode" placeholder="B099" style="font-weight:bold; text-transform:uppercase; margin-bottom:10px;">
+            <label>Nama File Gambar (di folder templates/images):</label>
+            <input type="text" id="cfgImg" placeholder="desain-b099.jpg" style="margin-bottom:10px;">
+            <div class="modal-footer">
+                <button onclick="document.getElementById('configModal').style.display='none'" class="btn-layout">Batal</button>
+                <button onclick="processExport()" class="btn-primary">Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="logModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 700px; width: 90%;">
+            <h3>📜 Riwayat Pencetakan</h3>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="downloadLogCSV()" class="btn-success" style="padding: 5px 15px;">📥 Download Excel (.csv)</button>
+                <button onclick="clearLogs()" class="btn-danger" style="padding: 5px 15px;">🗑️ Hapus Semua</button>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.2);">
+                <table>
+                    <thead style="position: sticky; top: 0;">
+                        <tr>
+                            <th>Waktu</th>
+                            <th>No. Invoice</th>
+                            <th>Kode Template</th>
+                            <th>Jml</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer" style="margin-top: 15px;">
+                <button onclick="document.getElementById('logModal').style.display='none'" class="btn-layout">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. GLOBAL STATE & HELPER
+        // ============================================================
+        window.templates = {}; 
+        window.addTemplate = function(kode, data) { 
+            window.templates[kode] = data; 
+            console.log("✅ Template Loaded: " + kode); 
+        };
+
+        const isElectron = typeof require !== 'undefined' && typeof process !== 'undefined' && process.versions && process.versions.electron;
+        console.log("🔍 Running in:", isElectron ? "Electron" : "Browser");
+
+        const localLand = "./bg-landscape.jpg";
+        const localPort = "./bg-portrait.jpg";
+        let currentLayout = 'landscape';
+        let currentRotation = 0;
+        let lastWidth = 550, lastHeight = 385;
+        let photoSize = 150;
+        let photoShape = 'rectangle';
+        let isDragging = false;
+        let dragElement = null;
+        let dragStartX = 0, dragStartY = 0;
+        let elementStartX = 0, elementStartY = 0;
+        let selectedElement = null;
+        let selectedElementType = null;
+        let historyStack = [];
+        let historyIndex = -1;
+        const MAX_HISTORY = 20;
+
+        const mapInputToClass = {
+            'inpTitle1': 'txt-title', 'inpTitle2': 'txt-title-sub', 'inpName': 'txt-name',
+            'inpIntro': 'txt-intro', 'inpDetails': 'txt-details', 'inpPrayer': 'txt-prayer',
+            'inpFooter': 'txt-footer', 'inpParents': 'txt-parents'
+        };
+        const mapClassToInput = Object.fromEntries(Object.entries(mapInputToClass).map(a => a.reverse()));
+
+        // ============================================================
+        // 2. TEMPLATE LOADER (PERBAIKAN UTAMA)
+        // ============================================================
+        function loadScriptSafe(code) {
+            // Cek apakah template sudah ada
+            if (window.templates[code]) {
+                console.log("📦 Template already loaded:", code);
+                return true;
+            }
+            
+            // Cek environment
+            if (isElectron) {
+                try {
+                    const fs = require('fs'); 
+                    const path = require('path');
+                    let possiblePaths = [
+                        path.join(process.resourcesPath, 'templates', code + '.js'),
+                        path.join(__dirname, 'templates', code + '.js')
+                    ];
+                    for (let p of possiblePaths) {
+                        if (fs.existsSync(p)) {
+                            window.eval(fs.readFileSync(p, 'utf-8'));
+                            console.log("✅ Template loaded (Electron):", code);
+                            return true;
+                        }
+                    }
+                    console.warn("⚠️ Template missing in Electron:", code);
+                } catch (err) {
+                    console.error("❌ Error loading template in Electron:", err);
+                }
+            } else {
+                // Browser: gunakan fetch + script tag fallback
+                try {
+                    // Simpan callback untuk async load
+                    if (!window._templateCallbacks) window._templateCallbacks = {};
+                    
+                    fetch('templates/' + code + '.js')
+                        .then(response => {
+                            if (!response.ok) throw new Error('HTTP ' + response.status);
+                            return response.text();
+                        })
+                        .then(scriptContent => {
+                            eval(scriptContent);
+                            console.log("✅ Template loaded via fetch:", code);
+                            if (window._templateCallbacks[code]) {
+                                window._templateCallbacks[code]();
+                                delete window._templateCallbacks[code];
+                            }
+                        })
+                        .catch(err => {
+                            console.warn("⚠️ Fetch failed for:", code, err);
+                            // Fallback ke script tag
+                            let s = document.createElement('script');
+                            s.src = 'templates/' + code + '.js';
+                            s.onload = function() {
+                                console.log("✅ Template loaded via script tag:", code);
+                                if (window._templateCallbacks[code]) {
+                                    window._templateCallbacks[code]();
+                                    delete window._templateCallbacks[code];
+                                }
+                            };
+                            s.onerror = function() {
+                                console.error("❌ Script tag failed for:", code);
+                                if (window._templateCallbacks[code]) {
+                                    window._templateCallbacks[code]();
+                                    delete window._templateCallbacks[code];
+                                }
+                            };
+                            document.body.appendChild(s);
+                        });
+                    return false; // Async
+                } catch (e) {
+                    console.error("❌ Error loading template in browser:", e);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function loadByCode() {
+            const rawCode = document.getElementById('inputCode').value.trim();
+            if (!rawCode) {
+                alert("Masukkan kode template!");
+                return;
+            }
+            const code = rawCode.toUpperCase();
+            saveState();
+            
+            if (window.templates[code]) {
+                applyTemplate(code);
+                return;
+            }
+            
+            // Tampilkan loading
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // Simpan callback
+            if (!window._templateCallbacks) window._templateCallbacks = {};
+            window._templateCallbacks[code] = function() {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                if (window.templates[code]) {
+                    applyTemplate(code);
+                } else {
+                    alert("❌ Template " + code + " tidak ditemukan!");
+                }
+            };
+            
+            // Coba load
+            const loaded = loadScriptSafe(code);
+            if (loaded) {
+                // Synchronous success
+                document.getElementById('loadingOverlay').style.display = 'none';
+                if (window.templates[code]) {
+                    applyTemplate(code);
+                } else {
+                    alert("❌ Template " + code + " tidak ditemukan!");
+                }
+                delete window._templateCallbacks[code];
+            } else {
+                // Async, tunggu callback dengan timeout
+                setTimeout(function() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    if (window._templateCallbacks[code]) {
+                        delete window._templateCallbacks[code];
+                        if (window.templates[code]) {
+                            applyTemplate(code);
+                        } else {
+                            alert("⏱️ Template " + code + " tidak ditemukan (timeout)!");
+                        }
+                    }
+                }, 5000);
+            }
+        }
+
+        function loadBulkTemplates() {
+            const ranges = [{ prefix: 'A', count: 20 }, { prefix: 'B', count: 50 }, { prefix: 'C', count: 20 }];
+            ranges.forEach(r => {
+                for (let i = 1; i <= r.count; i++) {
+                    loadScriptSafe(r.prefix + i.toString().padStart(3, '0'));
+                }
+            });
+            loadScriptSafe('ulangtahun');
+        }
+
+        function checkTemplateStatus() {
+            console.log("📋 Loaded templates:", Object.keys(window.templates));
+            const code = document.getElementById('inputCode').value.trim().toUpperCase();
+            if (code) {
+                console.log("🔍 Checking template:", code, window.templates[code] ? "✅ FOUND" : "❌ NOT FOUND");
+            }
+        }
+
+        // ============================================================
+        // 3. APPLY TEMPLATE (DENGAN FALLBACK GAMBAR)
+        // ============================================================
+        function applyTemplate(type) {
+            if (!type || !window.templates[type]) {
+                console.warn("⚠️ Template not found:", type);
+                return;
+            }
+            const t = window.templates[type];
+            const scale = (document.getElementById('sizeSelect').value === '9x6') ? 0.9 : 1;
+
+            // Reset teks
+            document.querySelectorAll('.movable-txt').forEach(el => {
+                el.style.left = '50%'; 
+                el.style.transform = 'translateX(-50%)';
+                el.style.width = 'auto'; 
+                el.style.textAlign = '';
+                el.style.fontFamily = '';
+                el.style.fontWeight = 'normal';
+                el.style.lineHeight = '1.2';
+                el.style.color = '#000000';
+                el.style.whiteSpace = 'pre';
+                el.style.letterSpacing = '0px'; 
+                el.style.textShadow = 'none'; 
+                el.classList.remove('multi-line');
+            });
+
+            setLayout(t.layout); 
+            resetRotation();
+
+            // ---- LOAD BACKGROUND (PERBAIKAN) ----
+            const bgEl = document.getElementById('bg-image');
+            if (t.background) {
+                let finalPath = t.background;
+                if (!finalPath.includes('/') && !finalPath.startsWith('http')) {
+                    finalPath = 'templates/images/' + finalPath;
+                }
+                if (!finalPath.match(/\.(jpg|jpeg|png|webp)$/i)) {
+                    finalPath = finalPath + '.jpg';
+                }
+
+                if (isElectron) {
+                    try {
+                        const path = require('path');
+                        const fs = require('fs');
+                        let prodPath = path.join(process.resourcesPath, finalPath);
+                        if (fs.existsSync(prodPath)) {
+                            bgEl.src = 'file://' + prodPath.replace(/\\/g, '/') + '?t=' + Date.now();
+                        } else {
+                            let altPath = path.join(__dirname, finalPath);
+                            if (fs.existsSync(altPath)) {
+                                bgEl.src = 'file://' + altPath.replace(/\\/g, '/') + '?t=' + Date.now();
+                            } else {
+                                bgEl.src = finalPath + '?t=' + Date.now();
+                                bgEl.onerror = function() {
+                                    this.onerror = null;
+                                    this.src = (currentLayout === 'landscape') ? localLand : localPort;
+                                };
+                            }
+                        }
+                    } catch(e) {
+                        bgEl.src = finalPath + '?t=' + Date.now();
+                        bgEl.onerror = function() {
+                            this.onerror = null;
+                            this.src = (currentLayout === 'landscape') ? localLand : localPort;
+                        };
+                    }
+                } else {
+                    // Browser
+                    bgEl.src = finalPath + '?t=' + Date.now();
+                    bgEl.onerror = function() {
+                        this.onerror = null;
+                        // Coba dengan nama file saja
+                        let fileName = finalPath.split('/').pop();
+                        this.src = 'templates/images/' + fileName + '?t=' + Date.now();
+                        this.onerror = function() {
+                            this.onerror = null;
+                            this.src = (currentLayout === 'landscape') ? localLand : localPort;
+                        };
+                    };
+                }
+            } else {
+                bgEl.src = (t.layout === 'landscape') ? localLand : localPort;
+            }
+
+            // Isi teks
+            for (const [key, value] of Object.entries(t.texts)) {
+                const inputEl = document.getElementById(key); 
+                if (inputEl) inputEl.value = value;
+            }
+            syncText();
+
+            // Terapkan style
+            for (const [id, style] of Object.entries(t.styles)) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = style.display || 'block'; 
+                    if (style.display === 'none') continue;
+                    if (style.font) el.style.fontFamily = style.font;
+                    el.style.fontWeight = style.fontWeight || 'normal'; 
+                    el.style.color = style.color || '#000000'; 
+                    let fs = style.fontSize || 12; 
+                    el.style.fontSize = (fs * scale) + 'px';
+                    let ls = style.letterSpacing || 0; 
+                    el.style.letterSpacing = (ls * scale) + 'px';
+                    el.style.whiteSpace = style.whiteSpace || 'pre'; 
+                    if (style.textAlign) el.style.textAlign = style.textAlign;
+                    if (style.lineHeight) el.style.lineHeight = style.lineHeight;
+                    if (style.textShadow && style.textShadow !== 'none') {
+                        el.style.textShadow = style.textShadow;
+                        document.getElementById('textOutlineToggle').checked = true;
+                        if (style.outline) {
+                            document.getElementById('outlineColor').value = style.outline.outlineColor || '#ffffff';
+                            document.getElementById('outlineSize').value = style.outline.outlineSize || 1;
+                        }
+                    } else {
+                        el.style.textShadow = 'none';
+                        document.getElementById('textOutlineToggle').checked = false;
+                    }
+                    if (style.left !== undefined) {
+                        el.style.left = (style.left * scale) + 'px'; 
+                        el.style.transform = 'none';
+                        el.style.width = (style.width * scale) + 'px'; 
+                    }
+                    if (style.top !== undefined) el.style.top = (style.top * scale) + 'px';
+                }
+            }
+            saveState();
+        }
+
+        // ============================================================
+        // 4. SISANYA (FUNGSI YANG SUDAH ADA, TIDAK DIUBAH SIGNIFIKAN)
+        // ============================================================
+        function useBackupImage(img) { 
+            img.onerror = null; 
+            img.src = (currentLayout === 'landscape') ? localLand : localPort; 
+        }
+
+        function focusElement(targetClass) { 
+            activateEditMode(targetClass); 
+        }
+
+        function checkCustomSize() {
+            const sel = document.getElementById('sizeSelect');
+            const inputs = document.getElementById('customSizeInputs');
+            inputs.style.display = (sel.value === 'custom') ? 'flex' : 'none';
+        }
+
+        function checkCustomPaperSize() {
+            const sel = document.getElementById('paperSize').value;
+            const inputs = document.getElementById('customPaperInputs');
+            inputs.style.display = (sel === 'custom') ? 'flex' : 'none';
+        }
+
+        function setPhotoSizeManual(val) {
+            let size = parseInt(val);
+            if (!isNaN(size) && size > 10) {
+                saveState();
+                photoSize = size;
+                if (selectedElement && selectedElementType === 'photo') {
+                    selectedElement.style.width = size + 'px'; 
+                    selectedElement.style.height = size + 'px'; 
+                }
+            }
+        }
+
+        function syncText(specificId) {
+            const elements = ['Title1','Title2','Intro','Name','Details','Prayer','Footer','Parents'];
+            const elementsToProcess = specificId ? [specificId] : elements;
+            
+            elementsToProcess.forEach(id => { 
+                const el = document.getElementById('out'+id); 
+                const inputEl = document.getElementById('inp'+id);
+                if (el && inputEl) {
+                    const originalStyles = {
+                        position: el.style.position,
+                        left: el.style.left,
+                        top: el.style.top,
+                        transform: el.style.transform,
+                        width: el.style.width,
+                        textAlign: el.style.textAlign,
+                        whiteSpace: el.style.whiteSpace,
+                        display: el.style.display,
+                        fontSize: el.style.fontSize,
+                        fontFamily: el.style.fontFamily,
+                        fontWeight: el.style.fontWeight,
+                        color: el.style.color,
+                        lineHeight: el.style.lineHeight,
+                        letterSpacing: el.style.letterSpacing,
+                        textShadow: el.style.textShadow
+                    };
+                    
+                    const hasMultiLineClass = el.classList.contains('multi-line');
+                    const isSelected = el.classList.contains('selected-element');
+                    const text = inputEl.value.trim();
+                    
+                    if (text.includes('\n')) {
+                        el.innerHTML = text.split('\n').join('<br>');
+                        el.classList.add('multi-line');
+                    } else {
+                        el.textContent = text;
+                        el.classList.remove('multi-line');
+                    }
+                    
+                    el.style.position = originalStyles.position;
+                    el.style.left = originalStyles.left;
+                    el.style.top = originalStyles.top;
+                    el.style.transform = originalStyles.transform;
+                    el.style.width = 'auto';
+                    el.style.textAlign = originalStyles.textAlign;
+                    el.style.whiteSpace = text.includes('\n') ? 'pre-wrap' : 'pre';
+                    el.style.display = originalStyles.display;
+                    el.style.fontSize = originalStyles.fontSize;
+                    el.style.fontFamily = originalStyles.fontFamily;
+                    el.style.fontWeight = originalStyles.fontWeight;
+                    el.style.color = originalStyles.color;
+                    el.style.lineHeight = originalStyles.lineHeight;
+                    el.style.letterSpacing = originalStyles.letterSpacing;
+                    el.style.textShadow = originalStyles.textShadow;
+                    
+                    if (isSelected) el.classList.add('selected-element');
+                    if (!text) el.style.display = 'none';
+                    else el.style.display = originalStyles.display || 'block';
+                }
+            });
+        }
+
+        function setGender(type) {
+            document.getElementById('btnBoy').className = type === 'L' ? 'btn-gender-l active' : 'btn-gender-l';
+            document.getElementById('btnGirl').className = type === 'P' ? 'btn-gender-p active' : 'btn-gender-p';
+            ['inpIntro', 'inpPrayer', 'inpDetails'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    let txt = el.value;
+                    if (type === 'L') txt = txt.replace(/\bputri\b/gi, "putra").replace(/\bshalehah\b/gi, "shaleh").replace(/\bperempuan\b/gi, "laki-laki").replace(/\bsholehah\b/gi, "sholeh");
+                    else txt = txt.replace(/\bputra\b/gi, "putri").replace(/\bshaleh\b/gi, "shalehah").replace(/\blaki-laki\b/gi, "perempuan").replace(/\bsholeh\b/gi, "sholehah");
+                    el.value = txt;
+                }
+            });
+            syncText();
+        }
+
+        function setLayout(mode) {
+            currentLayout = mode;
+            const bg = document.getElementById('bg-image');
+            document.getElementById('btnLand').className = mode === 'landscape' ? 'btn-layout active' : 'btn-layout';
+            document.getElementById('btnPort').className = mode === 'portrait' ? 'btn-layout active' : 'btn-layout';
+            document.querySelectorAll('.movable-txt').forEach(el => { 
+                el.style.transform = 'translateX(-50%)'; 
+                el.style.left = '50%';
+            });
+            document.getElementById('card-wrapper').className = 'layout-' + mode;
+            if (mode === 'landscape') { 
+                if (!bg.src.includes('templates/images')) bg.src = localLand; 
+            } else { 
+                if (!bg.src.includes('templates/images')) bg.src = localPort; 
+            }
+            updateDimension();
+            lastWidth = parseFloat(document.getElementById('card-wrapper').style.width); 
+            lastHeight = parseFloat(document.getElementById('card-wrapper').style.height);
+            syncText(); 
+            loadStyle(); 
+        }
+
+        function loadStyle() {
+            var el = getTarget(); 
+            if (!el) return;
+            var style = window.getComputedStyle(el);
+            var scale = getComputedStyle(document.documentElement).getPropertyValue('--scale-factor') || 1;
+            
+            document.getElementById('styleSize').value = parseFloat(style.fontSize) / scale;
+            
+            let w = style.fontWeight; 
+            if (w === 'bold') w = 700; 
+            else if (w === 'normal') w = 400;
+            document.getElementById('styleWeight').value = parseInt(w) || 400;
+            
+            let lh = style.lineHeight; 
+            let fs = parseInt(style.fontSize);
+            if (lh === 'normal') document.getElementById('styleLineHeight').value = "1.2";
+            else { 
+                let lhVal = parseFloat(lh); 
+                if (!isNaN(lhVal) && fs > 0) document.getElementById('styleLineHeight').value = (lhVal/fs).toFixed(1); 
+            }
+            
+            let ls = style.letterSpacing;
+            if (ls === 'normal') ls = 0; 
+            else ls = parseFloat(ls);
+            document.getElementById('styleSpacing').value = ls / scale;
+
+            var currentFont = style.fontFamily.replace(/['"]/g, "").toLowerCase();
+            var fontSelect = document.getElementById('styleFont');
+            fontSelect.selectedIndex = 0; 
+            for (var i = 0; i < fontSelect.options.length; i++) {
+                let optVal = fontSelect.options[i].value.replace(/['"]/g, "").toLowerCase().split(',')[0];
+                if (currentFont.includes(optVal)) { fontSelect.selectedIndex = i; break; }
+            }
+            
+            var rgb = style.color;
+            if (rgb && rgb.startsWith('rgb')) {
+                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                function hex(x) { return ("0" + parseInt(x).toString(16)).slice(-2); }
+                if (rgb) document.getElementById('styleColor').value = "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+            }
+            
+            if (style.textShadow && style.textShadow !== 'none') {
+                document.getElementById('textOutlineToggle').checked = true;
+                const shadow = style.textShadow;
+                const colorMatch = shadow.match(/#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3}|rgb\([^)]+\)/g);
+                if (colorMatch && colorMatch.length > 0) {
+                    document.getElementById('outlineColor').value = rgbToHex(colorMatch[0]);
+                }
+                const sizeMatch = shadow.match(/(\d+(\.\d+)?)px/);
+                if (sizeMatch) {
+                    document.getElementById('outlineSize').value = parseFloat(sizeMatch[1]);
+                }
+            } else {
+                document.getElementById('textOutlineToggle').checked = false;
+            }
+        }
+
+        function updateDimension() {
+            const size = document.getElementById('sizeSelect').value;
+            const wrapper = document.getElementById('card-wrapper');
+            const root = document.documentElement;
+            const basePx = 55;
+            
+            let wUnit, hUnit, scaleFactor;
+            if (size === 'custom') {
+                const cW = parseFloat(document.getElementById('customW').value) || 10;
+                const cH = parseFloat(document.getElementById('customH').value) || 7;
+                if (currentLayout === 'landscape') { wUnit = cW; hUnit = cH; } 
+                else { wUnit = cH; hUnit = cW; }
+                scaleFactor = 1;
+            } else {
+                if (currentLayout === 'landscape') {
+                    if (size === '10x7') { wUnit=10; hUnit=7; scaleFactor=1; } 
+                    else { wUnit=9; hUnit=6; scaleFactor=0.9; }
+                } else {
+                    if (size === '10x7') { wUnit=7; hUnit=10; scaleFactor=1; } 
+                    else { wUnit=6; hUnit=9; scaleFactor=0.9; }
+                }
+            }
+            
+            const newWidth = wUnit * basePx; 
+            const newHeight = hUnit * basePx;
+            const widthRatio = newWidth / lastWidth;
+            const heightRatio = newHeight / lastHeight;
+            
+            document.querySelectorAll('.movable-txt').forEach(el => {
+                const style = window.getComputedStyle(el);
+                const currentFontSize = parseFloat(style.fontSize);
+                const currentLeft = parseFloat(style.left) || 0;
+                const currentTop = parseFloat(style.top) || 0;
+                const currentWidth = parseFloat(style.width) || 0;
+                if (!isNaN(currentLeft) && currentLeft !== 0) el.style.left = (currentLeft * widthRatio) + 'px';
+                if (!isNaN(currentTop) && currentTop !== 0) el.style.top = (currentTop * heightRatio) + 'px';
+                if (!isNaN(currentFontSize) && currentFontSize > 0) el.style.fontSize = (currentFontSize * scaleFactor) + 'px';
+                if (!isNaN(currentWidth) && currentWidth > 0) el.style.width = 'auto';
+                const currentLetterSpacing = parseFloat(style.letterSpacing) || 0;
+                if (!isNaN(currentLetterSpacing)) el.style.letterSpacing = (currentLetterSpacing * scaleFactor) + 'px';
+            });
+            
+            document.querySelectorAll('.photo-overlay-element').forEach(el => {
+                const style = window.getComputedStyle(el);
+                const currentLeft = parseFloat(style.left) || 0;
+                const currentTop = parseFloat(style.top) || 0;
+                const currentWidth = parseFloat(style.width) || 0;
+                const currentHeight = parseFloat(style.height) || 0;
+                if (!isNaN(currentLeft) && currentLeft !== 0) el.style.left = (currentLeft * widthRatio) + 'px';
+                if (!isNaN(currentTop) && currentTop !== 0) el.style.top = (currentTop * heightRatio) + 'px';
+                if (!isNaN(currentWidth) && currentWidth > 0) el.style.width = (currentWidth * widthRatio) + 'px';
+                if (!isNaN(currentHeight) && currentHeight > 0) el.style.height = (currentHeight * heightRatio) + 'px';
+            });
+            
+            wrapper.style.width = newWidth + 'px'; 
+            wrapper.style.height = newHeight + 'px';
+            root.style.setProperty('--scale-factor', scaleFactor);
+            lastWidth = newWidth; 
+            lastHeight = newHeight;
+            if (selectedElement && selectedElementType === 'text') loadStyleFromElement(selectedElement);
+        }
+
+        function rotateCard(deg) { 
+            currentRotation += deg; 
+            document.getElementById('rotator').style.transform = `rotate(${currentRotation}deg)`; 
+        }
+        function resetRotation() { currentRotation = 0; document.getElementById('rotator').style.transform = `rotate(0deg)`; }
+
+        function uploadBg(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('bg-image');
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        img.src = canvas.toDataURL('image/jpeg', 0.9);
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function resetBg() { 
+            document.getElementById('bg-image').src = currentLayout === 'landscape' ? localLand : localPort; 
+        }
+        function getTarget() { 
+            return document.querySelector('.' + document.getElementById('targetSelect').value); 
+        }
+
+        function applyStyle(type) {
+            const el = getTarget(); 
+            if (!el) return;
+            const scale = getComputedStyle(document.documentElement).getPropertyValue('--scale-factor') || 1;
+            if (type === 'color') el.style.color = document.getElementById('styleColor').value;
+            if (type === 'size') el.style.fontSize = (document.getElementById('styleSize').value * scale) + "px";
+            if (type === 'font') el.style.fontFamily = document.getElementById('styleFont').value;
+            if (type === 'weight') el.style.fontWeight = document.getElementById('styleWeight').value;
+            if (type === 'lineHeight') el.style.lineHeight = document.getElementById('styleLineHeight').value;
+            if (type === 'spacing') el.style.letterSpacing = (document.getElementById('styleSpacing').value * scale) + "px";
+            if (el.classList.contains('multi-line')) el.style.textAlign = 'center';
+        }
+
+        function adjustSize(a) { 
+            const s = document.getElementById('styleSize'); 
+            let v = parseFloat(s.value) || 10; 
+            v += a; 
+            if (v < 1) v = 1; 
+            s.value = parseFloat(v.toFixed(1)); 
+            applyStyle('size'); 
+        }
+        function adjustWeight(a) { 
+            const s=document.getElementById('styleWeight'); 
+            let v=parseInt(s.value)||400; 
+            v+=a; 
+            if (v<100) v=100; 
+            if (v>900) v=900; 
+            s.value=v; 
+            applyStyle('weight'); 
+        }
+        function adjustLineHeight(a) { 
+            const s=document.getElementById('styleLineHeight'); 
+            let v=parseFloat(s.value)||1.2; 
+            v+=a; 
+            v=Math.round(v*10)/10; 
+            if (v<0.5) v=0.5; 
+            s.value=v; 
+            applyStyle('lineHeight'); 
+        }
+        function adjustSpacing(a) {
+            const s = document.getElementById('styleSpacing');
+            let v = parseFloat(s.value) || 0;
+            v += a;
+            s.value = parseFloat(v.toFixed(1));
+            applyStyle('spacing');
+        }
+
+        async function uploadFont(input) {
+            if (input.files && input.files[0]) {
+                try {
+                    var uniqueFontName = "Custom-" + Date.now();
+                    var arrayBuffer = await input.files[0].arrayBuffer();
+                    var f = new FontFace(uniqueFontName, arrayBuffer);
+                    await f.load(); document.fonts.add(f);
+                    var el = getTarget(); var fs = document.getElementById('styleFont'); var op = document.createElement("option"); 
+                    op.text = input.files[0].name; op.value = uniqueFontName; fs.add(op); fs.value = uniqueFontName;
+                    if(el) el.style.fontFamily = uniqueFontName;
+                } catch (e) { alert("Error font: " + e); } input.value = '';
+            }
+        }
+
+        function generateTemplateCode() { 
+            document.getElementById('cfgCode').value = "NEW01"; 
+            document.getElementById('configModal').style.display = 'flex'; 
+        }
+        function processExport() {
+            let newCode = document.getElementById('cfgCode').value.trim().toUpperCase();
+            let imgName = document.getElementById('cfgImg').value.trim();
+            if (!newCode) return; 
+            document.getElementById('configModal').style.display = 'none';
+            const scaleFactor = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale-factor')) || 1;
+            let templateData = { layout: currentLayout, texts: {}, styles: {} };
+            if(imgName) { 
+                if (!imgName.match(/\.(jpg|jpeg|png|webp)$/i)) imgName += '.jpg'; 
+                templateData.background = 'templates/images/' + imgName; 
+            }
+            const mapInputToOutput = { 
+                'outTitle1': 'inpTitle1', 'outTitle2': 'inpTitle2', 'outIntro': 'inpIntro', 
+                'outName': 'inpName', 'outDetails': 'inpDetails', 'outPrayer': 'inpPrayer', 
+                'outFooter': 'inpFooter', 'outParents': 'inpParents' 
+            };
+            document.querySelectorAll('.movable-txt').forEach(el => {
+                const id = el.id; 
+                const inputId = mapInputToOutput[id];
+                if (inputId) templateData.texts[inputId] = document.getElementById(inputId).value;
+                const wrapper = document.getElementById('card-wrapper').getBoundingClientRect();
+                const rect = el.getBoundingClientRect();
+                const compStyle = window.getComputedStyle(el);
+                let finalTop = (rect.top - wrapper.top) / scaleFactor; 
+                let finalLeft = (rect.left - wrapper.left) / scaleFactor;
+                let fw = compStyle.fontWeight; 
+                if (fw === 'bold') fw = 700; 
+                else if (fw === 'normal') fw = 400;
+                let ls = compStyle.letterSpacing;
+                if (ls === 'normal') ls = 0; 
+                else ls = parseFloat(ls);
+                let outlineData = null;
+                if (compStyle.textShadow && compStyle.textShadow !== 'none') {
+                    outlineData = {
+                        textShadow: compStyle.textShadow,
+                        outlineSize: parseFloat(document.getElementById('outlineSize').value) || 1,
+                        outlineColor: document.getElementById('outlineColor').value || '#ffffff'
+                    };
+                }
+                templateData.styles[id] = {
+                    font: compStyle.fontFamily.replace(/"/g, "'"), 
+                    fontSize: parseFloat(compStyle.fontSize) / scaleFactor, 
+                    color: compStyle.color, 
+                    fontWeight: parseInt(fw) || 400,
+                    lineHeight: compStyle.lineHeight === 'normal' ? '1.2' : (parseFloat(compStyle.lineHeight)/parseFloat(compStyle.fontSize)).toFixed(1),
+                    letterSpacing: parseFloat((ls / scaleFactor).toFixed(1)),
+                    top: Math.round(finalTop), 
+                    left: Math.round(finalLeft), 
+                    width: Math.round(parseFloat(compStyle.width) / scaleFactor),
+                    display: compStyle.display, 
+                    textAlign: compStyle.textAlign,
+                    whiteSpace: 'pre',
+                    textShadow: outlineData ? outlineData.textShadow : 'none', 
+                    outline: outlineData 
+                };
+            });
+            document.getElementById('exportOutput').value = `addTemplate('${newCode}', ${JSON.stringify(templateData, null, 4)});`;
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+        function copyToClipboard() { 
+            const el = document.getElementById('exportOutput'); 
+            el.select(); 
+            document.execCommand('copy'); 
+            alert("Kode tersalin!"); 
+        }
+
+        function activateEditMode(targetClass) {
+            document.querySelectorAll('.selected-element').forEach(el => el.classList.remove('selected-element'));
+            const activeEl = document.querySelector('.' + targetClass); 
+            if (activeEl) activeEl.classList.add('selected-element');
+            document.getElementById('targetSelect').value = targetClass;
+            if (mapClassToInput[targetClass]) {
+                const inputId = mapClassToInput[targetClass];
+                document.querySelectorAll('.form-group textarea').forEach(tx => {
+                    tx.style.borderColor = 'rgba(255,255,255,0.2)';
+                    tx.style.boxShadow = 'none';
+                });
+                const inp = document.getElementById(inputId);
+                if (inp) { 
+                    inp.style.borderColor = 'var(--primary-color)'; 
+                    inp.style.boxShadow = '0 0 0 2px rgba(100, 255, 218, 0.2)';
+                    inp.focus(); 
+                }
+            }
+            loadStyle(); 
+        }
+
+        document.querySelector('.content-overlay').addEventListener('click', function(e) {
+            let targetClass = null; 
+            for (const key in mapClassToInput) { 
+                if (e.target.classList.contains(key)) { 
+                    targetClass = key; 
+                    break; 
+                } 
+            }
+            if (targetClass) activateEditMode(targetClass);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('movable-txt') && 
+                !e.target.closest('.sidebar') && 
+                !e.target.closest('.form-panel') && 
+                !e.target.closest('.modal-box')) { 
+                document.querySelectorAll('.selected-element').forEach(el => el.classList.remove('selected-element')); 
+            }
+        });
+
+        function saveState() {
+            if (historyIndex < historyStack.length - 1) { 
+                historyStack = historyStack.slice(0, historyIndex + 1); 
+            }
+            let outlineState = null;
+            if (selectedElement && selectedElementType === 'text') {
+                outlineState = {
+                    hasOutline: document.getElementById('textOutlineToggle').checked,
+                    outlineColor: document.getElementById('outlineColor').value,
+                    outlineSize: document.getElementById('outlineSize').value,
+                    textShadow: selectedElement.style.textShadow
+                };
+            }
+            const state = {
+                html: document.getElementById('card-wrapper').innerHTML,
+                inputs: {
+                    inpTitle1: document.getElementById('inpTitle1').value,
+                    inpName: document.getElementById('inpName').value,
+                    inpDetails: document.getElementById('inpDetails').value,
+                    inpParents: document.getElementById('inpParents').value,
+                    inpIntro: document.getElementById('inpIntro').value,
+                    inpPrayer: document.getElementById('inpPrayer').value,
+                    inpFooter: document.getElementById('inpFooter').value
+                },
+                layout: currentLayout, 
+                photoSize: photoSize, 
+                photoShape: photoShape,
+                sizeSelect: document.getElementById('sizeSelect').value,
+                currentRotation: currentRotation,
+                outline: outlineState 
+            };
+            historyStack.push(state);
+            if (historyStack.length > MAX_HISTORY) historyStack.shift();
+            historyIndex = historyStack.length - 1;
+            updateUndoButtons();
+        }
+
+        function restoreState(state) {
+            document.getElementById('card-wrapper').innerHTML = state.html;
+            for (let id in state.inputs) { 
+                const el = document.getElementById(id); 
+                if (el) el.value = state.inputs[id]; 
+            }
+            currentLayout = state.layout; 
+            photoSize = state.photoSize; 
+            photoShape = state.photoShape;
+            currentRotation = state.currentRotation || 0;
+            if (state.sizeSelect) {
+                document.getElementById('sizeSelect').value = state.sizeSelect;
+            }
+            document.getElementById('rotator').style.transform = `rotate(${currentRotation}deg)`;
+            document.getElementById('btnLand').className = currentLayout === 'landscape' ? 'btn-layout active' : 'btn-layout';
+            document.getElementById('btnPort').className = currentLayout === 'portrait' ? 'btn-layout active' : 'btn-layout';
+            document.getElementById('card-wrapper').className = 'layout-' + currentLayout;
+            if (state.outline && state.outline.hasOutline) {
+                document.getElementById('textOutlineToggle').checked = true;
+                document.getElementById('outlineColor').value = state.outline.outlineColor;
+                document.getElementById('outlineSize').value = state.outline.outlineSize;
+                if (selectedElement && selectedElementType === 'text') {
+                    selectedElement.style.textShadow = state.outline.textShadow;
+                }
+            } else if (state.outline) {
+                document.getElementById('textOutlineToggle').checked = false;
+            }
+            updateDimension(); 
+            rebindPhotoResize(); 
+            deselectAll();
+            syncText();
+        }
+
+        function undo() { 
+            if (historyIndex > 0) { 
+                historyIndex--; 
+                restoreState(historyStack[historyIndex]); 
+            } 
+            updateUndoButtons(); 
+        }
+        function redo() { 
+            if (historyIndex < historyStack.length - 1) { 
+                historyIndex++; 
+                restoreState(historyStack[historyIndex]); 
+            } 
+            updateUndoButtons(); 
+        }
+        function updateUndoButtons() {
+            document.getElementById('btnUndo').disabled = historyIndex <= 0;
+            document.getElementById('btnRedo').disabled = historyIndex >= historyStack.length - 1;
+        }
+
+        function setupDragAndDrop() {
+            const cardWrapper = document.getElementById('card-wrapper');
+            cardWrapper.addEventListener('mousedown', function(e) {
+                if (e.target.classList.contains('resize-handle')) return;
+                let target = e.target, foundElement = null, elementType = null;
+                while (target && target !== cardWrapper) {
+                    if (target.classList.contains('movable-txt')) { 
+                        foundElement = target; 
+                        elementType = 'text'; 
+                        break; 
+                    }
+                    if (target.classList.contains('photo-overlay-element') || target.tagName === 'IMG') {
+                        if (target.tagName === 'IMG' && target.parentElement.classList.contains('photo-overlay-element')) { 
+                            foundElement = target.parentElement; 
+                            elementType = 'photo'; 
+                        }
+                        else if (target.classList.contains('photo-overlay-element')) { 
+                            foundElement = target; 
+                            elementType = 'photo'; 
+                        }
+                        break;
+                    }
+                    target = target.parentElement;
+                }
+                if (foundElement) {
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                    foundElement.dataset.startX = foundElement.style.left;
+                    foundElement.dataset.startY = foundElement.style.top;
+                    selectElement(foundElement, elementType);
+                    isDragging = true; 
+                    dragElement = foundElement;
+                    dragStartX = e.clientX; 
+                    dragStartY = e.clientY;
+                    const rect = foundElement.getBoundingClientRect();
+                    const wrapperRect = cardWrapper.getBoundingClientRect();
+                    elementStartX = rect.left - wrapperRect.left;
+                    elementStartY = rect.top - wrapperRect.top;
+                    document.body.style.cursor = 'grabbing';
+                } else { 
+                    deselectAll(); 
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging || !dragElement) return;
+                e.preventDefault();
+                const newX = elementStartX + (e.clientX - dragStartX);
+                const newY = elementStartY + (e.clientY - dragStartY);
+                dragElement.style.left = newX + 'px';
+                dragElement.style.top = newY + 'px';
+                dragElement.style.transform = 'none';
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (isDragging && dragElement) {
+                    if (dragElement.style.left !== dragElement.dataset.startX || 
+                        dragElement.style.top !== dragElement.dataset.startY) {
+                        saveState();
+                    }
+                }
+                isDragging = false; 
+                dragElement = null; 
+                document.body.style.cursor = '';
+            });
+        }
+
+        function selectElement(el, type) {
+            deselectAll(); 
+            selectedElement = el; 
+            selectedElementType = type;
+            if (type === 'text') { 
+                el.classList.add('selected-element'); 
+                loadStyleFromElement(el); 
+            } else if (type === 'photo') { 
+                el.classList.add('selected'); 
+                photoSize = parseInt(el.style.width) || 150; 
+                document.getElementById('photoSize').value = photoSize; 
+            }
+        }
+
+        function loadStyleFromElement(el) {
+            const s = window.getComputedStyle(el);
+            const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale-factor')) || 1;
+            document.getElementById('styleSize').value = Math.round(parseFloat(s.fontSize) / scale);
+            document.getElementById('styleColor').value = rgbToHex(s.color);
+            const currentFont = s.fontFamily.replace(/['"]/g, "").toLowerCase();
+            const fontSelect = document.getElementById('styleFont');
+            for (let i = 0; i < fontSelect.options.length; i++) {
+                let optVal = fontSelect.options[i].value.replace(/['"]/g, "").toLowerCase().split(',')[0];
+                if (currentFont.includes(optVal)) { 
+                    fontSelect.selectedIndex = i; 
+                    break; 
+                }
+            }
+        }
+
+        function deselectAll() { 
+            document.querySelectorAll('.selected-element, .photo-overlay-element.selected').forEach(el => el.classList.remove('selected-element', 'selected')); 
+            selectedElement = null; 
+        }
+
+        function uploadOverlay(input) { 
+            if (input.files && input.files[0]) { 
+                saveState(); 
+                const reader = new FileReader(); 
+                reader.onload = function(e) { 
+                    const div = document.createElement('div'); 
+                    div.className = `photo-overlay-element ${photoShape}`; 
+                    div.style.width = photoSize + 'px'; 
+                    div.style.height = photoSize + 'px'; 
+                    div.style.left = '50px'; 
+                    div.style.top = '50px'; 
+                    div.style.position = 'absolute';
+                    div.innerHTML = `<img src="${e.target.result}"><div class="resize-handle"></div>`; 
+                    document.getElementById('card-wrapper').appendChild(div); 
+                    selectElement(div, 'photo'); 
+                    setupResize(div); 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+                input.value = ''; 
+            } 
+        }
+
+        function setupResize(el) { 
+            const handle = el.querySelector('.resize-handle'); 
+            if (!handle) return; 
+            handle.addEventListener('mousedown', function(e) { 
+                const initialW = el.style.width; 
+                e.stopPropagation(); 
+                e.preventDefault(); 
+                const startX = e.clientX; 
+                const startW = parseInt(el.style.width); 
+                function doResize(ev) { 
+                    const newW = startW + (ev.clientX - startX); 
+                    if (newW > 20) { 
+                        el.style.width = newW + 'px'; 
+                        el.style.height = newW + 'px'; 
+                        document.getElementById('photoSize').value = newW; 
+                    } 
+                } 
+                function stopResize() { 
+                    if (el.style.width !== initialW) saveState(); 
+                    window.removeEventListener('mousemove', doResize); 
+                    window.removeEventListener('mouseup', stopResize); 
+                } 
+                window.addEventListener('mousemove', doResize); 
+                window.addEventListener('mouseup', stopResize); 
+            }); 
+        }
+
+        function rebindPhotoResize() { 
+            document.querySelectorAll('.photo-overlay-element').forEach(el => { 
+                setupResize(el); 
+            }); 
+        }
+
+        function setPhotoShape(s) { 
+            photoShape = s; 
+            if (selectedElement && selectedElementType === 'photo') { 
+                selectedElement.classList.remove('rectangle', 'circular'); 
+                selectedElement.classList.add(s); 
+            } 
+        }
+
+        function adjustPhotoSize(d) { 
+            if (selectedElement && selectedElementType === 'photo') { 
+                saveState(); 
+                const w = parseInt(selectedElement.style.width) + d; 
+                selectedElement.style.width = w+'px'; 
+                selectedElement.style.height = w+'px'; 
+                document.getElementById('photoSize').value = w; 
+            } 
+        }
+
+        function setTextAlignment(align) { 
+            if (!selectedElement || selectedElementType !== 'text') return; 
+            selectedElement.style.textAlign = align; 
+            selectedElement.classList.remove('text-align-left', 'text-align-center', 'text-align-right'); 
+            selectedElement.classList.add('text-align-' + align); 
+        }
+
+        function rgbToHex(rgb) { 
+            if (!rgb || !rgb.startsWith || !rgb.startsWith('rgb')) return rgb || '#000000'; 
+            const a = rgb.match(/\d+/g); 
+            return "#" + ((1 << 24) + (parseInt(a[0]) << 16) + (parseInt(a[1]) << 8) + parseInt(a[2])).toString(16).slice(1); 
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('open');
+        }
+
+        function toggleTextOutline() { 
+            if (selectedElement && selectedElementType === 'text') { 
+                const isOn = document.getElementById('textOutlineToggle').checked; 
+                if (isOn) updateOutlineColor(); 
+                else selectedElement.style.textShadow = 'none'; 
+            } 
+        }
+
+        function updateOutlineColor() { 
+            if (selectedElement && document.getElementById('textOutlineToggle').checked) { 
+                const c = document.getElementById('outlineColor').value; 
+                const s = document.getElementById('outlineSize').value; 
+                selectedElement.style.textShadow = `-${s}px -${s}px 0 ${c}, ${s}px -${s}px 0 ${c}, -${s}px ${s}px 0 ${c}, ${s}px ${s}px 0 ${c}`; 
+            } 
+        }
+
+        function updateOutlineSize() { updateOutlineColor(); }
+
+        function convertImageToBase64(img, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            ctx.drawImage(img, 0, 0);
+            const dataURL = canvas.toDataURL('image/jpeg', 0.9);
+            callback(dataURL);
+        }
+        
+        function replaceImagesWithBase64(element) {
+            const images = element.querySelectorAll('img');
+            const promises = [];
+            images.forEach(img => {
+                if (img.src.startsWith('data:') || img.src.startsWith('blob:')) return;
+                const promise = new Promise((resolve) => {
+                    const tempImg = new Image();
+                    tempImg.crossOrigin = 'Anonymous';
+                    tempImg.onload = function() {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = tempImg.width;
+                            canvas.height = tempImg.height;
+                            ctx.drawImage(tempImg, 0, 0);
+                            img.src = canvas.toDataURL('image/jpeg', 0.9);
+                            resolve();
+                        } catch (e) { resolve(); }
+                    };
+                    tempImg.onerror = function() { resolve(); };
+                    tempImg.src = img.src + (img.src.includes('?') ? '&' : '?') + 't=' + Date.now();
+                });
+                promises.push(promise);
+            });
+            return Promise.all(promises);
+        }
+
+        async function saveAsImage() { 
+            document.getElementById('loadingOverlay').style.display = 'flex'; 
+            try { 
+                const wrapper = document.getElementById('card-wrapper');
+                const clone = wrapper.cloneNode(true);
+                const resizeHandles = clone.querySelectorAll('.resize-handle');
+                resizeHandles.forEach(handle => handle.style.display = 'none');
+                const selectedElements = clone.querySelectorAll('.selected-element, .photo-overlay-element.selected');
+                selectedElements.forEach(el => {
+                    el.style.border = 'none';
+                    el.style.outline = 'none';
+                });
+                await replaceImagesWithBase64(clone);
+                clone.style.position = 'fixed';
+                clone.style.left = '-9999px';
+                clone.style.top = '0';
+                clone.style.transform = 'none';
+                clone.style.zIndex = '-9999';
+                document.body.appendChild(clone);
+                const canvas = await html2canvas(clone, { 
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: false,
+                    allowTaint: false,
+                    logging: false,
+                    removeContainer: true
+                }); 
+                document.body.removeChild(clone);
+                const link = document.createElement('a'); 
+                link.download = 'Kartu-' + new Date().getTime() + '.png'; 
+                link.href = canvas.toDataURL('image/png'); 
+                link.click(); 
+            } catch(e) { 
+                console.error("Error saving image:", e); 
+                alert('Gagal menyimpan gambar.'); 
+            } 
+            document.getElementById('loadingOverlay').style.display = 'none'; 
+        }
+
+        async function saveAsPDF() { 
+            document.getElementById('loadingOverlay').style.display = 'flex'; 
+            try { 
+                const wrapper = document.getElementById('card-wrapper');
+                const clone = wrapper.cloneNode(true);
+                const resizeHandles = clone.querySelectorAll('.resize-handle');
+                resizeHandles.forEach(handle => handle.style.display = 'none');
+                const selectedElements = clone.querySelectorAll('.selected-element, .photo-overlay-element.selected');
+                selectedElements.forEach(el => {
+                    el.style.border = 'none';
+                    el.style.outline = 'none';
+                });
+                await replaceImagesWithBase64(clone);
+                clone.style.position = 'fixed';
+                clone.style.left = '-9999px';
+                clone.style.top = '0';
+                clone.style.transform = 'none';
+                clone.style.zIndex = '-9999';
+                document.body.appendChild(clone);
+                const canvas = await html2canvas(clone, { 
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: false,
+                    allowTaint: false,
+                    logging: false,
+                    removeContainer: true
+                }); 
+                document.body.removeChild(clone);
+                const { jsPDF } = window.jspdf; 
+                const size = document.getElementById('sizeSelect').value;
+                let width_mm, height_mm;
+                if (size === 'custom') {
+                    const cW = parseFloat(document.getElementById('customW').value) || 10;
+                    const cH = parseFloat(document.getElementById('customH').value) || 7;
+                    if (currentLayout === 'landscape') { width_mm = cW*10; height_mm = cH*10; }
+                    else { width_mm = cH*10; height_mm = cW*10; }
+                } else {
+                    if (currentLayout === 'landscape') {
+                        if (size === '10x7') { width_mm = 100; height_mm = 70; } 
+                        else { width_mm = 90; height_mm = 60; }
+                    } else {
+                        if (size === '10x7') { width_mm = 70; height_mm = 100; } 
+                        else { width_mm = 60; height_mm = 90; }
+                    }
+                }
+                const pdf = new jsPDF({
+                    orientation: currentLayout === 'landscape' ? 'landscape' : 'portrait',
+                    unit: 'mm',
+                    format: [width_mm, height_mm]
+                }); 
+                const imgWidth = pdf.internal.pageSize.getWidth();
+                const imgHeight = pdf.internal.pageSize.getHeight();
+                pdf.addImage(canvas.toDataURL('image/jpeg', 0.9), 'JPEG', 0, 0, imgWidth, imgHeight); 
+                pdf.save('Kartu-' + new Date().getTime() + '.pdf'); 
+            } catch(e) { 
+                console.error("Error saving PDF:", e);
+                alert('Gagal menyimpan PDF.'); 
+            } 
+            document.getElementById('loadingOverlay').style.display = 'none'; 
+        }
+
+        function resetAll() { if (confirm("Reset semua?")) location.reload(); }
+
+        function modeCetak() {
+            savePrintLog(); 
+            const wrapper = document.getElementById('card-wrapper');
+            const printArea = document.getElementById('print-area');
+            const qty = parseInt(document.getElementById('printQty').value) || 1;
+            const paperType = document.getElementById('paperSize').value;
+            const orderId = document.getElementById('printOrderId').value.trim();
+            const gapMm = parseInt(document.getElementById('printGap').value) || 0;
+            
+            const memHTML = wrapper.innerHTML; 
+            const memClass = wrapper.className;
+            const style = window.getComputedStyle(wrapper);
+            const wPx = parseFloat(style.width); 
+            const hPx = parseFloat(style.height);
+            let sizeSel = document.getElementById('sizeSelect').value;
+            
+            let baseW_mm, baseH_mm;
+            if (sizeSel === 'custom') {
+                const cW = parseFloat(document.getElementById('customW').value) || 10;
+                const cH = parseFloat(document.getElementById('customH').value) || 7;
+                baseW_mm = cW * 10;
+                baseH_mm = cH * 10;
+            } else {
+                if(currentLayout === 'landscape') {
+                    if(sizeSel === '10x7') { baseW_mm = 100; baseH_mm = 70; } 
+                    else { baseW_mm = 90; baseH_mm = 60; }
+                } else { 
+                    if(sizeSel === '10x7') { baseW_mm = 70; baseH_mm = 100; } 
+                    else { baseW_mm = 60; baseH_mm = 90; }
+                }
+            }
+
+            let deg = currentRotation; 
+            let isRotated90 = (Math.abs(deg / 90) % 2) === 1;
+            
+            let cellW_mm = (isRotated90 ? baseH_mm : baseW_mm) + gapMm; 
+            let cellH_mm = (isRotated90 ? baseW_mm : baseH_mm) + gapMm;
+
+            const mmToPx = 3.7795275591; 
+            const cellW_px = (isRotated90 ? baseH_mm : baseW_mm) * mmToPx; 
+            const cellH_px = (isRotated90 ? baseW_mm : baseH_mm) * mmToPx;
+            
+            let scale = isRotated90 ? Math.min(cellW_px / hPx, cellH_px / wPx) : Math.min(cellW_px / wPx, cellH_px / hPx);
+            
+            let paperW_mm;
+            if (paperType === 'custom') {
+                paperW_mm = parseFloat(document.getElementById('paperCustomW').value) || 210;
+            } else {
+                if (paperType === 'A3+') paperW_mm = 329;
+                else if (paperType === 'A3') paperW_mm = 297;
+                else if (paperType === 'A4') paperW_mm = 210;
+                else if (paperType === 'F4') paperW_mm = 215;
+                else paperW_mm = 210;
+            }
+
+            let cols = Math.floor((paperW_mm - 10) / cellW_mm); 
+            if (cols < 1) cols = 1;
+
+            printArea.innerHTML = ''; 
+            printArea.style.display = 'grid';
+            
+            for (let i=0; i<qty; i++) {
+                let cell = document.createElement('div'); 
+                cell.className = 'print-cell';
+                cell.style.width = cellW_mm + 'mm';
+                cell.style.height = cellH_mm + 'mm';
+
+                let content = document.createElement('div'); 
+                content.className = 'print-content ' + memClass;
+                content.innerHTML = memHTML; 
+                content.style.width = wPx + 'px'; 
+                content.style.height = hPx + 'px';
+                content.style.transformOrigin = 'center center'; 
+                content.style.transform = `rotate(${deg}deg) scale(${scale})`;
+                
+                cell.appendChild(content); 
+                printArea.appendChild(cell);
+            }
+            
+            if (orderId) {
+                let slug = document.createElement('div');
+                slug.className = 'print-slug-info';
+                slug.innerHTML = `<b>${orderId}</b> | ${sizeSel} - ${qty}pcs - Gap: ${gapMm}mm`;
+                printArea.appendChild(slug);
+            }
+            
+            printArea.style.gridTemplateColumns = `repeat(${cols}, ${cellW_mm}mm)`;
+            printArea.style.gridAutoRows = `${cellH_mm}mm`; 
+            printArea.style.width = (cols * cellW_mm) + 'mm';
+            
+            document.getElementById('rotator').style.display = 'none'; 
+            document.getElementById('print-area').style.display = 'grid'; 
+            document.getElementById('btnArrLayout').style.display = 'none'; 
+            document.getElementById('sidebarPrintActions').style.display = 'flex';
+        }
+
+        function modeEdit() {
+            document.getElementById('print-area').style.display = 'none'; 
+            document.getElementById('rotator').style.display = 'block';
+            document.getElementById('btnArrLayout').style.display = 'block'; 
+            document.getElementById('sidebarPrintActions').style.display = 'none';
+        }
+        
+        function savePrintLog() {
+            const invNo = document.getElementById('printOrderId').value || "-";
+            const tplCode = document.getElementById('inputCode').value || "CUSTOM"; 
+            const qty = document.getElementById('printQty').value || "0";
+            const now = new Date();
+            const timeString = now.toLocaleDateString('id-ID') + " " + now.toLocaleTimeString('id-ID');
+            const newLog = { date: timeString, invoice: invNo.toUpperCase(), code: tplCode.toUpperCase(), qty: qty };
+            let logs = JSON.parse(localStorage.getItem('printLogs')) || [];
+            logs.unshift(newLog); 
+            localStorage.setItem('printLogs', JSON.stringify(logs));
+        }
+
+        function openLogModal() {
+            const modal = document.getElementById('logModal');
+            const tbody = document.getElementById('logTableBody');
+            const logs = JSON.parse(localStorage.getItem('printLogs')) || [];
+            tbody.innerHTML = ""; 
+            if (logs.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:10px;'>Belum ada riwayat cetak.</td></tr>";
+            } else {
+                logs.forEach(log => {
+                    let row = `<tr>
+                        <td>${log.date}</td>
+                        <td style="font-weight:bold; color:var(--primary-color);">${log.invoice}</td>
+                        <td>${log.code}</td>
+                        <td style="text-align:center;">${log.qty}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            }
+            modal.style.display = 'flex';
+        }
+
+        function downloadLogCSV() {
+            const logs = JSON.parse(localStorage.getItem('printLogs')) || [];
+            if (logs.length === 0) { alert("Tidak ada data untuk di-download."); return; }
+            let csvContent = "data:text/csv;charset=utf-8,Waktu,No Invoice,Kode Template,Jumlah\n"; 
+            logs.forEach(function(rowArray) {
+                let row = `${rowArray.date},"${rowArray.invoice}","${rowArray.code}",${rowArray.qty}`;
+                csvContent += row + "\r\n";
+            });
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "riwayat_cetak.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        function clearLogs() {
+            if (confirm("Yakin ingin menghapus semua riwayat?")) {
+                localStorage.removeItem('printLogs');
+                openLogModal(); 
+            }
+        }
+
+        function adjustGap(val) {
+            const input = document.getElementById('printGap');
+            let current = parseInt(input.value) || 0;
+            current += val;
+            if (current < 0) current = 0;
+            input.value = current;
+            if (document.getElementById('print-area').style.display === 'grid') {
+                modeCetak();
+            }
+        }
+
+        // ============================================================
+        // 5. INIT
+        // ============================================================
+        window.onload = function() { 
+            setLayout('landscape'); 
+            setGender('L'); 
+            setupDragAndDrop();
+            saveState();
+            
+            document.getElementById('inpParents').value = "Sawalia & Fadilah";
+            document.getElementById('inpDetails').value = "Lahir: Bogor, 8 Juni 2019";
+            document.getElementById('inpFooter').value = "Kami yang berbahagia";
+            syncText();
+            
+            document.querySelectorAll('.form-panel textarea').forEach(textarea => {
+                textarea.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        setTimeout(() => { saveState(); syncText(); }, 10);
+                    }
+                });
+                textarea.addEventListener('input', function() { syncText(); });
+            });
+            
+            // Load bulk templates (async)
+            loadBulkTemplates();
+            
+            // Tambahkan helper ke console untuk debugging
+            window.checkTemplateStatus = checkTemplateStatus;
+        };
+    </script>
+</body>
+</html>
